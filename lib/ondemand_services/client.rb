@@ -1,4 +1,8 @@
+require 'securerandom'
 require 'ondemand_services/configurable'
+require 'ondemand_services/authenticate'
+require 'ondemand_services/authorization'
+require 'ondemand_services/entity'
 
 module OndemandServices
 
@@ -6,14 +10,19 @@ module OndemandServices
   #
   # @see http://wavetronix.github.io/adobe-dps-sdk-ruby/api-docs
   class Client
+
     include OndemandServices::Configurable
+    include OndemandServices::Client::Authorization
+    include OndemandServices::Client::Entity
+
+    attr_accessor :access_token, :client_id, :session_id
 
     def initialize(options = {})
       OndemandServices::Configurable.keys.each do |key|
         instance_variable_set(:"@#{key}", options[key] || OndemandServices.instance_variable_get(:"@#{key}"))
       end
-
-      # TODO: Authenticate here?
+      @access_token = Authenticate.authenticate(@client_id, @client_secret, @device_id, @device_token)
+      @session_id = SecureRandom.uuid
     end
 
     # Text representation of the client, masking secrets and tokens

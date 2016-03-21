@@ -13,10 +13,8 @@ group :test do
   gem 'coveralls', require: false
   gem 'minitest'
   gem 'minitest-reporters'
-  gem 'vcr'
-  gem 'webmock'
+  gem 'simplecov', require: false
+  gem 'simplecov-json', require: false
 end
-
-# Specify your gem's dependencies in adobe-dps-sdk.gemspec
 
 gemspec
